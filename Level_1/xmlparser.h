@@ -2,8 +2,11 @@
 #define XMLPARSER_H
 
 #include <QString>
-#include "stack.h"
+//#include "stack.h"
 #include <QXmlStreamReader>
+#include "globals.h"
+#include <QDebug>
+#include <QStack>
 
 class XMLParser {
 public:
@@ -13,7 +16,7 @@ public:
 
 private:
     QString xmlContent;
-    Stack<QString> tagStack;
+    QStack<QString> tagStack;
 
     bool isOpeningTag(const QString& tag);
     bool isClosingTag(const QString& tag);

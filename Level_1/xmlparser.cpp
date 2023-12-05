@@ -1,5 +1,6 @@
 #include "xmlparser.h"
 
+
 XMLParser::XMLParser() {
     // Initialization if needed
 }
@@ -7,68 +8,49 @@ XMLParser::XMLParser() {
 void XMLParser::setXMLContent(const QString& content) {
     xmlContent = content;
 }
- //  WORKING
-//the tag extraction is implemented using a library for debuging a problem in the code i will modify it later
+
 bool XMLParser::checkConsistency() {
-    QXmlStreamReader reader(xmlContent);
-    tagStack = Stack<QString>();
+    QStack tagStack = QStack<QString>();
+    check.clear();  // Clear the queue before processing
 
-    while (!reader.atEnd()) {
-        if (reader.isStartElement()) {
-            tagStack.push(reader.name().toString());
-        } else if (reader.isEndElement()) {
-            if (tagStack.empty() || tagStack.top() != reader.name().toString()) {
-                return false; // Inconsistency: mismatched tags
+    int index = 0;
+    int length = xmlContent.length();
+
+    while (index < length) {
+        if (xmlContent[index] == '<') {
+            // Check if it's a start or end tag
+            bool isStartTag = true;
+            if (index + 1 < length && xmlContent[index + 1] == '/') {
+                isStartTag = false;
             }
-            tagStack.pop();
-        }
 
-        reader.readNext();
-    }
+            // Extract the tag name
+            int startTagName = index + (isStartTag ? 1 : 2);  // Adjust index for start/end tags
+            int endTagName = xmlContent.indexOf('>', startTagName);
+            QString tagName = xmlContent.mid(startTagName, endTagName - startTagName).trimmed();
 
-    return tagStack.empty() && !reader.hasError();
-}
-
-/*
-bool XMLParser::checkConsistency() {
-    // Reset the stack
-    tagStack = Stack<QString>();
-
-    int i = 0;
-    while (i < xmlContent.size()) {
-        // Extract the current tag
-        QString currentTag;
-        while (i < xmlContent.size() && xmlContent[i] != '<' && xmlContent[i] != '>') {
-            currentTag += xmlContent[i];
-            ++i;
-        }
-
-        // Skip empty tags
-        if (currentTag.isEmpty()) {
-            continue;
-        }
-
-        // Check if it's an opening or closing tag
-        if (isOpeningTag(currentTag)) {
-            tagStack.push(currentTag);
-        } else if (isClosingTag(currentTag)) {
-            if (tagStack.empty() || tagStack.top() != currentTag) {
-                return false; // Inconsistency: mismatched tags
+            if (isStartTag) {
+                tagStack.push(tagName);
+            } else {
+                if (tagStack.isEmpty() || tagStack.top() != tagName) {
+                    check.enqueue(tagStack.top());
+                } else {
+                    tagStack.pop();
+                }
             }
-            tagStack.pop();
+
+            index = endTagName + 1;  // Move index to the character after '>'
+        } else {
+            index++;
         }
     }
 
-    // Check if all tags are closed
-    return tagStack.empty();
-}*/
-/*
-bool XMLParser::isOpeningTag(const QString& tag) {
-    return tag.startsWith('<') && tag.endsWith('>') && !tag.startsWith("</");
-}
+    // Check for any remaining tags in the stack
+    while (!tagStack.empty()) {
+        check.enqueue(tagStack.top());
+        tagStack.pop();
+    }
 
-bool XMLParser::isClosingTag(const QString& tag) {
-    return tag.startsWith("</") && tag.endsWith('>');
+    // Return true if the check queue is empty and there are no errors
+    return check.isEmpty();
 }
-
-*/

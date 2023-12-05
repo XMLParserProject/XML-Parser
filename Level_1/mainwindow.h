@@ -21,6 +21,9 @@
 #include <QVector>
 #include <QPair>
 #include <QMessageBox>
+#include <globals.h>
+#include <QTextBrowser>
+#include <stack.h>
 
 
 QT_BEGIN_NAMESPACE
@@ -45,10 +48,13 @@ private slots:
 
     void on_enterXmlButton_clicked();
 
+
+
 private:
     Ui::MainWindow *ui;
     void displayXmlContent(const QString& xmlContent);
     void displayXmlWithMistakes(const QString& xmlContent);
     void highlightMistake(QTextDocument* document, const QString& tagName, const QString& errorToken);
+
 };
 #endif // MAINWINDOW_H

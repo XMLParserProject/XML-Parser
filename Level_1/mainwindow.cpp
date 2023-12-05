@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "globals.h"
+#include <QDebug>
 
 
 
@@ -37,8 +39,9 @@ void MainWindow::on_loadFileButton_clicked() {
                 displayXmlContent(xmlContent);
             } else {
                 // XML has inconsistencies, show with mistakes underlined
-                //displayXmlWithMistakes(xmlContent);
-               QApplication::exit();//used for debugging
+               displayXmlWithMistakes(xmlContent);
+               // qDebug() << "Queue front:" << check.front();
+              // QApplication::exit();//used for debugging
             }
         } else {
             qDebug() << "Error opening XML file";
@@ -60,8 +63,9 @@ void MainWindow::on_enterXmlButton_clicked() {
             displayXmlContent(xmlContent);
         } else {
             // XML has inconsistencies, show with mistakes underlined
-           // displayXmlWithMistakes(xmlContent);
-           QApplication::exit();//used for debugging
+           // qDebug() << "Queue front:" << check.front();
+            displayXmlWithMistakes(xmlContent);
+          //QApplication::exit();//used for debugging
         }
     }
 }
@@ -82,31 +86,42 @@ void MainWindow::displayXmlContent(const QString& xmlContent)
     ui->verticalLayout->addWidget(scrollArea);
 
 }
+
 void MainWindow::displayXmlWithMistakes(const QString& xmlContent) {
-    // Create a new QTextEdit to display the XML content with mistakes underlined
-    QTextEdit *xmlTextEdit = new QTextEdit(this);
+    // Create a new QTextBrowser to display the XML content with mistakes highlighted
+    QTextBrowser *xmlBrowser = new QTextBrowser(this);
 
-    // Use QTextDocument for more control over formatting
-    QTextDocument *document = new QTextDocument();
-    xmlTextEdit->setDocument(document);
+    // Set the XML content to the QTextBrowser
+    xmlBrowser->setPlainText(xmlContent);
 
-    // Set the XML content to the QTextEdit
-    xmlTextEdit->setPlainText(xmlContent);
+    // Process the XML content and highlight mistakes
+    QTextCursor cursor(xmlBrowser->document());
 
     // Identify the missing closing tag
     int errorStart = xmlContent.indexOf('<');
     int errorEnd = xmlContent.indexOf('>', errorStart + 1);
 
     while (errorStart != -1 && errorEnd != -1) {
-        // Check if the tag is incomplete (missing closing tag)
-        QString tag = xmlContent.mid(errorStart, errorEnd - errorStart + 1);
-        if (tag.contains('<') || tag.contains('/')) {
-            QTextCursor cursor(xmlTextEdit->document());
-            cursor.setPosition(errorStart);
-            cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor, errorEnd - errorStart + 1);
-            QTextCharFormat format;
-            format.setUnderlineStyle(QTextCharFormat::WaveUnderline);
-            cursor.mergeCharFormat(format);
+        if (xmlContent[errorStart + 1] != '/') {
+            // Check if the tag is an opening tag
+            QString tagName = xmlContent.mid(errorStart + 1, errorEnd - errorStart - 1).trimmed();
+
+            if (!check.isEmpty() && tagName == check.front()) {
+                // Change the color of the matching tag to red
+                QTextCharFormat format;
+                format.setForeground(QColor(Qt::red));
+
+                // Calculate the start and end positions of the current tag
+                int tagStart = errorStart;
+                int tagEnd = errorEnd;
+
+                // Apply formatting only to the current tag
+                cursor.setPosition(tagStart);
+                cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor, tagEnd - tagStart + 1);
+                cursor.mergeCharFormat(format);
+                // Dequeue the front of the queue
+                check.dequeue();
+            }
         }
 
         // Move to the next potential error
@@ -114,21 +129,18 @@ void MainWindow::displayXmlWithMistakes(const QString& xmlContent) {
         errorEnd = xmlContent.indexOf('>', errorStart + 1);
     }
 
-    // Set the QTextEdit as the widget of the new QScrollArea
-    QScrollArea *scrollArea = new QScrollArea(this);
-    scrollArea->setWidget(xmlTextEdit);
-    scrollArea->setWidgetResizable(true);
-
-    // Add the new QScrollArea to the layout
-    ui->verticalLayout->addWidget(scrollArea);
+    // Add the new QTextBrowser to the layout
+    ui->verticalLayout->addWidget(xmlBrowser);
 }
-
-
 
 void MainWindow::on_label_linkActivated(const QString &link)
 {
      qDebug() << "Link Activated:" << link;
 }
+
+
+
+
 
 
 
