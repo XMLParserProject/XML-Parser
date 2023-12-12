@@ -12,7 +12,7 @@ void XMLParser::setXMLContent(const QString& content) {
 bool XMLParser::checkConsistency() {
     QStack tagStack = QStack<QString>();
     check.clear();  // Clear the queue before processing
-
+    bool consistent=true;
     int index = 0;
     int length = xmlContent.length();
 
@@ -33,7 +33,9 @@ bool XMLParser::checkConsistency() {
                 tagStack.push(tagName);
             } else {
                 if (tagStack.isEmpty() || tagStack.top() != tagName) {
+                    consistent=false;
                     check.enqueue(tagStack.top());
+                    tagStack.pop();
                 } else {
                     tagStack.pop();
                 }
@@ -52,5 +54,8 @@ bool XMLParser::checkConsistency() {
     }
 
     // Return true if the check queue is empty and there are no errors
-    return check.isEmpty();
+    return check.isEmpty()&&consistent;
+}
+QString XMLParser::getxmlcontent(){
+    return xmlContent;
 }

@@ -12,13 +12,11 @@ SOURCES += \
     globals.cpp \
     main.cpp \
     mainwindow.cpp \
-    stack.cpp \
     xmlparser.cpp
 
 HEADERS += \
     globals.h \
     mainwindow.h \
-    stack.h \
     xmlparser.h
 
 FORMS += \

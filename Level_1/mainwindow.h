@@ -3,7 +3,6 @@
 
 #include <QMainWindow>
 #include <QXmlStreamReader>
-#include "stack.h"
 #include "ui_mainwindow.h"
 #include <QDebug>
 #include <QFileDialog>
@@ -23,7 +22,7 @@
 #include <QMessageBox>
 #include <globals.h>
 #include <QTextBrowser>
-#include <stack.h>
+#include <QDomDocument>
 
 
 QT_BEGIN_NAMESPACE
@@ -40,6 +39,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+
 private slots:
 
     void on_label_linkActivated(const QString &link);
@@ -48,13 +48,27 @@ private slots:
 
     void on_enterXmlButton_clicked();
 
+    void on_correctErrorsButton_clicked();
 
+    void on_PrettifyingButton_clicked();
+
+    void on_ConvertToJsonButton_clicked();
+
+    void on_MinifyingButton_clicked();
+
+    void on_compressButton_clicked();
+
+    void on_DecompressButton_clicked();
+
+    void on_SavejasonButton_clicked();
 
 private:
     Ui::MainWindow *ui;
     void displayXmlContent(const QString& xmlContent);
     void displayXmlWithMistakes(const QString& xmlContent);
     void highlightMistake(QTextDocument* document, const QString& tagName, const QString& errorToken);
+
+
 
 };
 #endif // MAINWINDOW_H

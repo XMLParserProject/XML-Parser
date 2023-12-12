@@ -2,7 +2,6 @@
 #define XMLPARSER_H
 
 #include <QString>
-//#include "stack.h"
 #include <QXmlStreamReader>
 #include "globals.h"
 #include <QDebug>
@@ -13,6 +12,7 @@ public:
     XMLParser();
     void setXMLContent(const QString& content);
     bool checkConsistency();
+    QString getxmlcontent();
 
 private:
     QString xmlContent;

@@ -20,7 +20,6 @@ MainWindow::~MainWindow()
 }
 
 
-
 void MainWindow::on_loadFileButton_clicked() {
     QString filePath = QFileDialog::getOpenFileName(this, "Choose an XML file", QString(), "XML Files (*.xml)");
 
@@ -140,8 +139,122 @@ void MainWindow::on_label_linkActivated(const QString &link)
 
 
 
+void MainWindow::on_correctErrorsButton_clicked()
+{
+    QString xmlcontent = xmlParser.getxmlcontent();
 
 
 
 
+
+
+
+
+    QLabel *correctErrors = new QLabel(this);
+    correctErrors->setText(xmlcontent);
+    correctErrors->setWordWrap(true);
+
+    ui->scrollArea_2->setWidget(correctErrors);
+    ui->scrollArea_2->setWidgetResizable(true);
+}
+
+void MainWindow::on_PrettifyingButton_clicked()
+{
+    QString xmlcontent = xmlParser.getxmlcontent();
+
+
+
+
+
+
+    QLabel *PrettifyingLabel = new QLabel(this);
+    PrettifyingLabel->setText(xmlcontent);
+    PrettifyingLabel->setWordWrap(true);
+
+    ui->scrollArea_2->setWidget(PrettifyingLabel);
+    ui->scrollArea_2->setWidgetResizable(true);
+}
+
+
+void MainWindow::on_ConvertToJsonButton_clicked()
+{
+    QString xmlcontent = xmlParser.getxmlcontent();
+
+
+
+
+
+
+    QLabel *ConvertToJsonLabel = new QLabel(this);
+    ConvertToJsonLabel->setText(xmlcontent);
+    ConvertToJsonLabel->setWordWrap(true);
+
+    ui->scrollArea_2->setWidget(ConvertToJsonLabel);
+    ui->scrollArea_2->setWidgetResizable(true);
+}
+
+
+void MainWindow::on_MinifyingButton_clicked()
+{
+    QString xmlcontent = xmlParser.getxmlcontent();
+
+
+
+
+    QLabel *MinifyingLabel = new QLabel(this);
+    MinifyingLabel->setText(xmlcontent);
+    MinifyingLabel->setWordWrap(true);
+
+    ui->scrollArea_2->setWidget(MinifyingLabel);
+    ui->scrollArea_2->setWidgetResizable(true);
+}
+
+
+void MainWindow::on_compressButton_clicked()
+{
+    QString xmlcontent = xmlParser.getxmlcontent();
+
+
+
+
+
+
+
+
+
+
+    QLabel *compressLabel = new QLabel(this);
+    compressLabel->setText(xmlcontent);
+    compressLabel->setWordWrap(true);
+
+    ui->scrollArea_2->setWidget(compressLabel);
+    ui->scrollArea_2->setWidgetResizable(true);
+
+}
+
+
+void MainWindow::on_DecompressButton_clicked()
+{
+    QString xmlcontent = xmlParser.getxmlcontent();
+
+
+
+
+
+
+
+
+    QLabel *DecompressLabel = new QLabel(this);
+    DecompressLabel->setText(xmlcontent);
+    DecompressLabel->setWordWrap(true);
+
+    ui->scrollArea_2->setWidget(DecompressLabel);
+    ui->scrollArea_2->setWidgetResizable(true);
+}
+
+
+void MainWindow::on_SavejasonButton_clicked()
+{
+
+}
 
