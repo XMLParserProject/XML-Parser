@@ -1,14 +1,6 @@
 #include <string>
+#include "Helpers.h"
 using namespace std;
-
-class Helpers
-{
-private:
-    
-public:
-    string removeUnwantedSpaces(string XMLText);
-};
-
 
 string  Helpers::removeUnwantedSpaces(string XMLText){
     string output="";
