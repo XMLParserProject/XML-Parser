@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "globals.h"
+#include"Compression.h"
+#include"Helpers.h"
 #include <QDebug>
 
 
@@ -213,9 +215,9 @@ void MainWindow::on_MinifyingButton_clicked()
 void MainWindow::on_compressButton_clicked()
 {
     QString xmlcontent = xmlParser.getxmlcontent();
-
-
-
+    Helpers o1;
+    string unSpaceXML = o1.removeUnwantedSpaces(xmlcontent.toStdString());
+    string compress_data=compress(unSpaceXML);
 
 
 
@@ -224,7 +226,7 @@ void MainWindow::on_compressButton_clicked()
 
 
     QLabel *compressLabel = new QLabel(this);
-    compressLabel->setText(xmlcontent);
+    compressLabel->setText(QString::fromStdString(compress_data));
     compressLabel->setWordWrap(true);
 
     ui->scrollArea_2->setWidget(compressLabel);

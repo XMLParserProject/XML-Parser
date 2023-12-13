@@ -9,12 +9,16 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    Compression.cpp \
+    Helpers.cpp \
     globals.cpp \
     main.cpp \
     mainwindow.cpp \
     xmlparser.cpp
 
 HEADERS += \
+    Compression.h \
+    Helpers.h \
     globals.h \
     mainwindow.h \
     xmlparser.h
