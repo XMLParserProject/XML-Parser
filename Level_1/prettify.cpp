@@ -7,46 +7,48 @@ Prettify::Prettify() {
 }
 
 QString Prettify::prettifyXml(const QString& xmlContent){
-    QString filteredContent = xmlContent.simplified();
+    QString filtered_xmlContent = filterConsecutiveNewlines(xmlContent.trimmed());
     int index = 0;
     QString currentLine = "";
-    int length = filteredContent.length();
+    int length = filtered_xmlContent.length();
 
 
     while (index < length) {
 
         //check if closing or opening tag:
-        if (xmlContent[index] == '<'){
+        if (filtered_xmlContent[index] == '<'){
 
-            if (xmlContent[index+1] == '/'){
+            if (filtered_xmlContent[index+1] == '/'){
                 //closing
                 isOpening_tag = false;
 
-                currentLine += xmlContent[index];
+                currentLine += filtered_xmlContent[index];
 
             }
             else{
                 //opening
 
-                currentLine += xmlContent[index];
+                currentLine += filtered_xmlContent[index];
                 }
 
         }
         // check for closing casess
-        else if (xmlContent[index] == '>'){
-            currentLine += xmlContent[index];
+        else if (filtered_xmlContent[index] == '>'){
+            currentLine += filtered_xmlContent[index];
+                       
+            //last line case
+            if (index+2 > length && !isOpening_tag){
+                printLine(currentLine);
+                currentLine = "";
+            }
+            
             //closing then closing tag
-            if (xmlContent[index+2] == '<' && xmlContent[index+3] == '/' && !isOpening_tag){
+            else if (filtered_xmlContent[index+2] == '<' && filtered_xmlContent[index+3] == '/' && !isOpening_tag){
                 indentationLevel--;
             }
             //opening then opening
-            else if (xmlContent[index+2] == '<' && xmlContent[index+3] != '/' && isOpening_tag){
+            else if (filtered_xmlContent[index+2] == '<' && filtered_xmlContent[index+3] != '/' && isOpening_tag){
                 indentationLevel++;
-            }
-            //last line case
-            else if (index+2 > length && !isOpening_tag){
-                printLine(currentLine);
-                currentLine = "";
             }
             //any other case
             else{
@@ -55,8 +57,8 @@ QString Prettify::prettifyXml(const QString& xmlContent){
             }
         }
 
-        else if (xmlContent[index] == '\n'){
-            currentLine += xmlContent[index];
+        else if (filtered_xmlContent[index] == '\n'){
+            currentLine += filtered_xmlContent[index];
             printLine(currentLine);
             currentLine = "";
             isOpening_tag = true;
@@ -64,7 +66,7 @@ QString Prettify::prettifyXml(const QString& xmlContent){
         }
 
         else {
-            currentLine += xmlContent[index];
+            currentLine += filtered_xmlContent[index];
         }
 
         index++;
@@ -83,5 +85,9 @@ void Prettify::writeIndentation() {
     for (int i = 0; i < indentationLevel; ++i) {
         prettifiedXml += "         ";
     }
+}
+
+QString Prettify::filterConsecutiveNewlines(QString content) {
+    return content.replace(QRegularExpression("\\n+"), "\n");
 }
 
