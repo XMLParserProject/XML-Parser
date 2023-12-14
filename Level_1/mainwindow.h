@@ -23,6 +23,7 @@
 #include <globals.h>
 #include <QTextBrowser>
 #include <QDomDocument>
+#include <prettify.h>
 
 
 QT_BEGIN_NAMESPACE
