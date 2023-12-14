@@ -3,7 +3,7 @@
 
 
 #include <QString>
-
+#include <QRegularExpression>
 
 class Prettify
 {
@@ -18,7 +18,7 @@ public:
     void writeIndentation();
     void printLine(const QString& line);
     QString prettifyXml(const QString& xmlContent);
-
+    QString filterConsecutiveNewlines(QString content);
 
 };
 
