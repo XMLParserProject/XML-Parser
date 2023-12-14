@@ -232,6 +232,21 @@ void MainWindow::on_compressButton_clicked()
     ui->scrollArea_2->setWidget(compressLabel);
     ui->scrollArea_2->setWidgetResizable(true);
 
+    QString filePath = QFileDialog::getSaveFileName(this, tr("Save XML File"), QDir::homePath(), tr("XML Files (*.xml)"));
+
+    // Save compressed data to the chosen file
+    if (!filePath.isEmpty()) {
+        QFile file(filePath);
+        if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            QTextStream stream(&file);
+            stream << QString::fromStdString(compress_data);
+            file.close();
+        } else {
+            // Handle error opening the file
+            qDebug() << "Error opening file for writing:" << file.errorString();
+        }
+    }
+
 }
 
 
