@@ -8,6 +8,7 @@
 
 
 XMLParser xmlParser;
+Prettify prettify;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -163,14 +164,10 @@ void MainWindow::on_correctErrorsButton_clicked()
 void MainWindow::on_PrettifyingButton_clicked()
 {
     QString xmlcontent = xmlParser.getxmlcontent();
-
-
-
-
-
-
+    QString prettifiedXml = prettify.prettifyXml(xmlcontent);
+    
     QLabel *PrettifyingLabel = new QLabel(this);
-    PrettifyingLabel->setText(xmlcontent);
+    PrettifyingLabel->setText(prettifiedXml);
     PrettifyingLabel->setWordWrap(true);
 
     ui->scrollArea_2->setWidget(PrettifyingLabel);
