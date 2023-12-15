@@ -14,6 +14,7 @@ SOURCES += \
     globals.cpp \
     main.cpp \
     mainwindow.cpp \
+    prettify.cpp \
     xmlparser.cpp
 
 HEADERS += \
@@ -21,6 +22,7 @@ HEADERS += \
     Helpers.h \
     globals.h \
     mainwindow.h \
+    prettify.h \
     xmlparser.h
 
 FORMS += \

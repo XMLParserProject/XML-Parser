@@ -42,8 +42,6 @@ void MainWindow::on_loadFileButton_clicked() {
             } else {
                 // XML has inconsistencies, show with mistakes underlined
                displayXmlWithMistakes(xmlContent);
-               // qDebug() << "Queue front:" << check.front();
-              // QApplication::exit();//used for debugging
             }
         } else {
             qDebug() << "Error opening XML file";
@@ -65,9 +63,7 @@ void MainWindow::on_enterXmlButton_clicked() {
             displayXmlContent(xmlContent);
         } else {
             // XML has inconsistencies, show with mistakes underlined
-           // qDebug() << "Queue front:" << check.front();
             displayXmlWithMistakes(xmlContent);
-          //QApplication::exit();//used for debugging
         }
     }
 }
@@ -165,7 +161,7 @@ void MainWindow::on_PrettifyingButton_clicked()
 {
     QString xmlcontent = xmlParser.getxmlcontent();
     QString prettifiedXml = prettify.prettifyXml(xmlcontent);
-    
+    xmlParser.setXMLContent(prettifiedXml);
     QLabel *PrettifyingLabel = new QLabel(this);
     PrettifyingLabel->setText(prettifiedXml);
     PrettifyingLabel->setWordWrap(true);
