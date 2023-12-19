@@ -68,7 +68,9 @@ private:
     void displayXmlContent(const QString& xmlContent);
     void displayXmlWithMistakes(const QString& xmlContent);
     void highlightMistake(QTextDocument* document, const QString& tagName, const QString& errorToken);
-
+    void highlightXmlMistakes(QTextBrowser* xmlBrowser, const QString& xmlContent);
+    void highlightTagError(QTextCursor& cursor, const QString& xmlContent, int errorStart, int errorEnd);
+    void moveToNextError(const QString& xmlContent, int& errorEnd, int& errorStart);
 
 
 };
