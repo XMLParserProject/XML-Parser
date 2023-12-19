@@ -85,6 +85,10 @@ void MainWindow::displayXmlContent(const QString& xmlContent)
 
 }
 
+/*
+________________________________________________________________
+*/
+
 void MainWindow::displayXmlWithMistakes(const QString& xmlContent) {
     // Create a new QTextBrowser to display the XML content with mistakes highlighted
     QTextBrowser *xmlBrowser = new QTextBrowser(this);
@@ -93,43 +97,54 @@ void MainWindow::displayXmlWithMistakes(const QString& xmlContent) {
     xmlBrowser->setPlainText(xmlContent);
 
     // Process the XML content and highlight mistakes
+    highlightXmlMistakes(xmlBrowser, xmlContent);
+
+    // Add the new QTextBrowser to the layout
+    ui->verticalLayout->addWidget(xmlBrowser);
+    
+}
+
+void MainWindow::highlightXmlMistakes(QTextBrowser* xmlBrowser, const QString& xmlContent) {
     QTextCursor cursor(xmlBrowser->document());
 
-    // Identify the missing closing tag
     int errorStart = xmlContent.indexOf('<');
     int errorEnd = xmlContent.indexOf('>', errorStart + 1);
 
     while (errorStart != -1 && errorEnd != -1) {
-        if (xmlContent[errorStart + 1] != '/') {
-            // Check if the tag is an opening tag
-            QString tagName = xmlContent.mid(errorStart + 1, errorEnd - errorStart - 1).trimmed();
-
-            if (!check.isEmpty() && tagName == check.front()) {
-                // Change the color of the matching tag to red
-                QTextCharFormat format;
-                format.setForeground(QColor(Qt::red));
-
-                // Calculate the start and end positions of the current tag
-                int tagStart = errorStart;
-                int tagEnd = errorEnd;
-
-                // Apply formatting only to the current tag
-                cursor.setPosition(tagStart);
-                cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor, tagEnd - tagStart + 1);
-                cursor.mergeCharFormat(format);
-                // Dequeue the front of the queue
-                check.dequeue();
-            }
-        }
-
-        // Move to the next potential error
-        errorStart = xmlContent.indexOf('<', errorEnd);
-        errorEnd = xmlContent.indexOf('>', errorStart + 1);
+        highlightTagError(cursor, xmlContent, errorStart, errorEnd);
+        moveToNextError(xmlContent, errorEnd, errorStart);
     }
-
-    // Add the new QTextBrowser to the layout
-    ui->verticalLayout->addWidget(xmlBrowser);
 }
+
+void MainWindow::highlightTagError(QTextCursor& cursor, const QString& xmlContent, int errorStart, int errorEnd) {
+    if (xmlContent[errorStart + 1] != '/') {
+        QString tagName = xmlContent.mid(errorStart + 1, errorEnd - errorStart - 1).trimmed();
+
+        if (!check.isEmpty() && tagName == check.front()) {
+            // Change the color of the matching tag to red
+            QTextCharFormat format;
+            format.setForeground(QColor(Qt::red));
+
+            // Apply formatting only to the current tag
+            cursor.setPosition(errorStart);
+            cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor, errorEnd - errorStart + 1);
+            cursor.mergeCharFormat(format);
+
+            // Dequeue the front of the queue
+            check.dequeue();
+        }
+    }
+}
+
+void MainWindow::moveToNextError(const QString& xmlContent, int& errorEnd, int& errorStart) {
+    // Move to the next potential error
+    errorStart = xmlContent.indexOf('<', errorEnd);
+    errorEnd = xmlContent.indexOf('>', errorStart + 1);
+}
+
+/*
+________________________________________________________________
+*/
 
 void MainWindow::on_label_linkActivated(const QString &link)
 {
