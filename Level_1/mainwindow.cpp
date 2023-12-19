@@ -44,7 +44,8 @@ void MainWindow::on_loadFileButton_clicked() {
                displayXmlWithMistakes(xmlContent);
             }
         } else {
-            qDebug() << "Error opening XML file";
+            // Handle error opening the file
+            qDebug() << "Error opening XML file" << file.errorString();
         }
     }
 }
