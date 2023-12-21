@@ -226,7 +226,8 @@ void MainWindow::on_compressButton_clicked()
     QString xmlcontent = xmlParser.getxmlcontent();
     Helpers o1;
     string unSpaceXML = o1.removeUnwantedSpaces(xmlcontent.toStdString());
-    string compress_data=compress(unSpaceXML);
+    HuffmanTree root;
+    string compress_data=root.compress(unSpaceXML);
 
 
 

@@ -2,7 +2,7 @@
 
 
 // Generate Huffman tree and codes
-HuffmanNode* buildHuffmanTree(priority_queue<HuffmanNode*, vector<HuffmanNode*>, Compare>& pq) {
+HuffmanNode* HuffmanTree::buildHuffmanTree(priority_queue<HuffmanNode*, vector<HuffmanNode*>, Compare>& pq) {
     while (pq.size() > 1) {
         HuffmanNode* left = pq.top();
         pq.pop();
@@ -21,7 +21,7 @@ HuffmanNode* buildHuffmanTree(priority_queue<HuffmanNode*, vector<HuffmanNode*>,
 }
 
 // Traverse the Huffman tree to generate codes
-void generateHuffmanCodes(HuffmanNode* root, string code, unordered_map<char, string>& huffmanCodes) {
+void HuffmanTree::generateHuffmanCodes(HuffmanNode* root, string code, unordered_map<char, string>& huffmanCodes) {
     if (root == nullptr) {
         return;
     }
@@ -35,7 +35,7 @@ void generateHuffmanCodes(HuffmanNode* root, string code, unordered_map<char, st
 }
 
 // Encode the input data using Huffman codes
-string encodedata(string input, unordered_map<char, string>& huffmanCodes) {
+string HuffmanTree::encodedata(string input, unordered_map<char, string>& huffmanCodes) {
     string encodeddata = "";
     for (char c : input) {
         encodeddata += huffmanCodes[c];
@@ -44,7 +44,7 @@ string encodedata(string input, unordered_map<char, string>& huffmanCodes) {
     return compressData;
 }
 
-string byteToChar(string data)
+string HuffmanTree::byteToChar(string data)
 {
     string output;
     for (int i = 0; i < data.size(); i = i + 8) {
@@ -53,7 +53,7 @@ string byteToChar(string data)
     return output;
 }
 
-char binaryStringToChar(const string& binaryString) {
+char HuffmanTree::binaryStringToChar(const string& binaryString) {
     // Convert binary string to integer
     int intValue = bitset<8>(binaryString).to_ulong();
 
@@ -63,7 +63,7 @@ char binaryStringToChar(const string& binaryString) {
     return charValue;
 }
 
-string compress(string input) {
+string HuffmanTree::compress(string input) {
     //Count the frequency of each character
     unordered_map<char, int> frequencyMap;
     for (char c : input) {
@@ -77,13 +77,15 @@ string compress(string input) {
     }
 
     // Build Huffman tree
-    HuffmanNode* root = buildHuffmanTree(pq);
+    root = buildHuffmanTree(pq);
 
     // Generate Huffman codes
     unordered_map<char, string> huffmanCodes;
     generateHuffmanCodes(root, "", huffmanCodes);
 
-    // Encode the input word
+    // Step 5: Encode the input word
     string compress_data = encodedata(input, huffmanCodes);
     return compress_data;
 }
+
+

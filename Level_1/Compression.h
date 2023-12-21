@@ -19,21 +19,32 @@ struct HuffmanNode {
 struct Compare {
     bool operator()(HuffmanNode* L, HuffmanNode* R) const {
         if (L->frequency == R->frequency)
-            return L->character > R->character;
+            return L->character > L->character;
         return L->frequency > R->frequency;
     }
 };
 
-// Generate Huffman tree and codes
-HuffmanNode* buildHuffmanTree(priority_queue<HuffmanNode*, vector<HuffmanNode*>, Compare>& pq);
+class HuffmanTree {
+private:
+    HuffmanNode* root;
+    // Generate Huffman tree and codes
+    HuffmanNode* buildHuffmanTree(priority_queue<HuffmanNode*, vector<HuffmanNode*>, Compare>& pq);
+    // Traverse the Huffman tree to generate codes
+    void generateHuffmanCodes(HuffmanNode* root, string code, unordered_map<char, string>& huffmanCodes);
+    // Encode the input word using Huffman codes
+    string encodedata(string input, unordered_map<char, string>& huffmanCodes);
 
-// Traverse the Huffman tree to generate codes
-void generateHuffmanCodes(HuffmanNode* root, string code, unordered_map<char, string>& huffmanCodes);
+    char binaryStringToChar(const string& binaryString);
 
-// Encode the input word using Huffman codes
-string encodedata(string input, unordered_map<char, string>& huffmanCodes);
+    string byteToChar(string data);
 
-string byteToChar(string encodedDate);
-char binaryStringToChar(const string& binaryString); 
+public:
+    HuffmanTree() : root(nullptr) {}
 
-string compress(string input);
+    ~HuffmanTree() {
+
+    }
+
+    string compress(string input);
+
+};
