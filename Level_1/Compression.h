@@ -38,6 +38,10 @@ private:
 
     string byteToChar(string data);
 
+
+    string compressedXML;
+
+
 public:
     HuffmanTree() : root(nullptr) {}
 
@@ -46,5 +50,17 @@ public:
     }
 
     string compress(string input);
+
+    string decompress(const string& encodedData);
+
+    void setxmlcompressedfile(string compressedxml);
+
+    string getxmlcompressedfile();
+
+    HuffmanNode* getTreeRoot();
+
+    string charToBinaryString(const string& inputString);
+
+    string decodeData(const string& encodedData, HuffmanNode* root);
 
 };

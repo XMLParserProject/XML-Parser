@@ -85,7 +85,66 @@ string HuffmanTree::compress(string input) {
 
     // Step 5: Encode the input word
     string compress_data = encodedata(input, huffmanCodes);
+    setxmlcompressedfile(compress_data);
     return compress_data;
 }
 
+string HuffmanTree::charToBinaryString(const string& inputString) {
+    string binaryResult = "";
+
+    for (char c : inputString) {
+        // Convert char to integer
+        int intValue = static_cast<int>(c);
+
+        // Convert integer to binary string
+        string binaryString = bitset<8>(intValue).to_string();
+
+        // Append the binary string to the result
+        binaryResult += binaryString;
+    }
+
+    return binaryResult;
+}
+
+string HuffmanTree::decodeData(const string& encodedData, HuffmanNode* root) {
+    string decodedData;
+    HuffmanNode* current = root;
+
+    for (char bit : encodedData) {
+        if (bit == '0') {
+            current = current->left;
+        }
+        else if (bit == '1') {
+            current = current->right;
+        }
+
+        if (current->left == nullptr && current->right == nullptr) {
+            // Leaf node reached, append character to decoded data
+            decodedData += current->character;
+            current = root;  // Reset to the root for the next character
+        }
+    }
+
+    return decodedData;
+}
+
+string HuffmanTree::decompress(const string& encodedData) {
+
+    string binarydata = charToBinaryString(encodedData);
+    // Decode the encoded data
+    string decodedData = decodeData(binarydata, root);
+
+    return decodedData;
+}
+
+void HuffmanTree::setxmlcompressedfile(string compressedxml){
+    compressedXML=compressedxml;
+}
+
+string HuffmanTree::getxmlcompressedfile(){
+    return compressedXML;
+}
+HuffmanNode* HuffmanTree::getTreeRoot(){
+   return root;
+    }
 

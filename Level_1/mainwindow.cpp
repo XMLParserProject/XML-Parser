@@ -1,12 +1,12 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "globals.h"
-#include"Compression.h"
+
 #include"Helpers.h"
 #include <QDebug>
 
 
-
+HuffmanTree root;
 XMLParser xmlParser;
 Prettify prettify;
 
@@ -226,7 +226,7 @@ void MainWindow::on_compressButton_clicked()
     QString xmlcontent = xmlParser.getxmlcontent();
     Helpers o1;
     string unSpaceXML = o1.removeUnwantedSpaces(xmlcontent.toStdString());
-    HuffmanTree root;
+
     string compress_data=root.compress(unSpaceXML);
 
 
@@ -262,17 +262,13 @@ void MainWindow::on_compressButton_clicked()
 
 void MainWindow::on_DecompressButton_clicked()
 {
-    QString xmlcontent = xmlParser.getxmlcontent();
+    string encodedData=root.getxmlcompressedfile();
+    string binarydata=root.charToBinaryString(encodedData);
+    HuffmanNode* TreeRoot =root.getTreeRoot();
+    string decodedData=root.decodeData(binarydata,TreeRoot);
 
-
-
-
-
-
-
-
-    QLabel *DecompressLabel = new QLabel(this);
-    DecompressLabel->setText(xmlcontent);
+    QLabel *DecompressLabel  = new QLabel(this);
+    DecompressLabel->setText(QString::fromStdString(decodedData));
     DecompressLabel->setWordWrap(true);
 
     ui->scrollArea_2->setWidget(DecompressLabel);
