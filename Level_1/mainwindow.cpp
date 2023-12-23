@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "globals.h"
-
 #include"Helpers.h"
 #include <QDebug>
 
@@ -190,14 +189,12 @@ void MainWindow::on_PrettifyingButton_clicked()
 void MainWindow::on_ConvertToJsonButton_clicked()
 {
     QString xmlcontent = xmlParser.getxmlcontent();
-
-
-
-
-
-
+    // 
+    XMLToJson json(xmlcontent);
+    QString jsonText=json.getJSONText();
+    // 
     QLabel *ConvertToJsonLabel = new QLabel(this);
-    ConvertToJsonLabel->setText(xmlcontent);
+    ConvertToJsonLabel->setText(jsonText);
     ConvertToJsonLabel->setWordWrap(true);
 
     ui->scrollArea_2->setWidget(ConvertToJsonLabel);
@@ -208,12 +205,13 @@ void MainWindow::on_ConvertToJsonButton_clicked()
 void MainWindow::on_MinifyingButton_clicked()
 {
     QString xmlcontent = xmlParser.getxmlcontent();
-
-
-
+    // 
+    Helpers helper;
+    QString minifiedString = helper.removeUnwantedSpaces(xmlcontent);
+    // 
 
     QLabel *MinifyingLabel = new QLabel(this);
-    MinifyingLabel->setText(xmlcontent);
+    MinifyingLabel->setText(minifiedString);
     MinifyingLabel->setWordWrap(true);
 
     ui->scrollArea_2->setWidget(MinifyingLabel);
@@ -228,11 +226,6 @@ void MainWindow::on_compressButton_clicked()
     string unSpaceXML = o1.removeUnwantedSpaces(xmlcontent.toStdString());
 
     string compress_data=root.compress(unSpaceXML);
-
-
-
-
-
 
 
     QLabel *compressLabel = new QLabel(this);
