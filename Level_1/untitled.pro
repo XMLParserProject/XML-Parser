@@ -11,6 +11,8 @@ CONFIG += c++17
 SOURCES += \
     Compression.cpp \
     Helpers.cpp \
+    Tree.cpp \
+    XMLToJson.cpp \
     globals.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -20,6 +22,8 @@ SOURCES += \
 HEADERS += \
     Compression.h \
     Helpers.h \
+    Tree.h \
+    XMLToJson.h \
     globals.h \
     mainwindow.h \
     prettify.h \
