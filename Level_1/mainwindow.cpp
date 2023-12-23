@@ -189,12 +189,12 @@ void MainWindow::on_PrettifyingButton_clicked()
 void MainWindow::on_ConvertToJsonButton_clicked()
 {
     QString xmlcontent = xmlParser.getxmlcontent();
-    // 
-    XMLToJson json(xmlcontent);
-    QString jsonText=json.getJSONText();
+    //
+    XMLToJson json(xmlcontent.toStdString());
+    string jsonText=json.getJSONText();
     // 
     QLabel *ConvertToJsonLabel = new QLabel(this);
-    ConvertToJsonLabel->setText(jsonText);
+    ConvertToJsonLabel->setText(QString::fromStdString(jsonText));
     ConvertToJsonLabel->setWordWrap(true);
 
     ui->scrollArea_2->setWidget(ConvertToJsonLabel);
@@ -207,11 +207,11 @@ void MainWindow::on_MinifyingButton_clicked()
     QString xmlcontent = xmlParser.getxmlcontent();
     // 
     Helpers helper;
-    QString minifiedString = helper.removeUnwantedSpaces(xmlcontent);
+    string minifiedString = helper.removeUnwantedSpaces(xmlcontent.toStdString());
     // 
 
     QLabel *MinifyingLabel = new QLabel(this);
-    MinifyingLabel->setText(minifiedString);
+    MinifyingLabel->setText(QString::fromStdString(minifiedString));
     MinifyingLabel->setWordWrap(true);
 
     ui->scrollArea_2->setWidget(MinifyingLabel);
