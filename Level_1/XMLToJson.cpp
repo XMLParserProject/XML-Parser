@@ -35,21 +35,17 @@ string XMLToJson::convertToJson(){
     for(int i=0;i<elements.size();i++){
         if(elements[i].empty())
             continue;
-        if(i<elements.size()-1 && (elements[i] == elements[i+1] + 's')){
-            // if last element = current element + 's' open '[' 
-            // example:  users = user + 's'
-            level++;
-            output+=  "\n" + HandleIndentation(level) + addQuotes(elements[i]) + ": [" ;
-            openedBrackets.push('[');
-        }else if((elements[i].length()>3) && (elements[i].substr(0,4) == ";<?>")){
+        if((elements[i].length()>3) && (elements[i].substr(0,4) == ";<?>")){
             level--;
             output+= addQuotes(elements[i].substr(4,elements[i].length()-4)) ;
             output[mark]= '\0';
+            if(!openedBrackets.empty())
+                openedBrackets.pop();
             if(i < (elements.size()-1) && elements[i+1].length() > 0 && (elements[i+1][0] != '/')){
                 output+=',';
             }
         }else if(elements[i].length() > 0 && (elements[i][0] == '/')){
-            output +=  "\n" + HandleIndentation(level) + closeBracket(openedBrackets.top());
+            output +=  "\n" + HandleIndentation(level) + '}';
             level--;
             openedBrackets.pop();
             if(i < (elements.size()-1) && elements[i+1].length() > 0 && (elements[i+1][0] != '/')){
@@ -60,6 +56,8 @@ string XMLToJson::convertToJson(){
                 level++;
             if(i>0 && ((elements[i-1].length()>3) && (elements[i-1].substr(0,4) == ";<?>") || elements[i-1][0] == '/')){
                 output[mark]= '\0';
+                if(!openedBrackets.empty())
+                openedBrackets.pop();
                 level--;
             }
             level++;
@@ -130,12 +128,6 @@ Tree XMLToJson::convertToTree(){
 }
 string XMLToJson::addQuotes(string element){
     return "\"" + element + "\"";
-}
-char XMLToJson::closeBracket(char bracket){
-    if(bracket == '{')
-        return '}';
-    else
-        return ']';
 }
 vector<string> XMLToJson::ToVector(string elements){
     vector<string> output;
