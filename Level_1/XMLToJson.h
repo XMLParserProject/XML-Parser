@@ -30,9 +30,6 @@ private:
     // Add double quotes to an element
     string addQuotes(string element);
 
-    // Match closing bracket
-    char closeBracket(char bracket);
-
 public:
     // Constructor
     XMLToJson(string xmlText);
