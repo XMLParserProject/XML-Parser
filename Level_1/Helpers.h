@@ -4,11 +4,13 @@
 
 #include <string>
 
+using namespace std;
+
 class Helpers {
 private:
 
 public:
-    std::string removeUnwantedSpaces(std::string XMLText);
+    string removeUnwantedSpaces(string XMLText);
 };
 
 #endif
