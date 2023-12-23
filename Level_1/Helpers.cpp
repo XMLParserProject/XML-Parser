@@ -32,3 +32,9 @@ string Helpers::removeUnwantedSpaces(string XMLText) {
 
     return output;
 }
+
+void Helpers::saveFile(string text,string path){
+    ofstream outfile (path);
+    outfile << text << endl;
+    outfile.close();
+}
