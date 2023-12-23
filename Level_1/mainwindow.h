@@ -25,6 +25,7 @@
 #include <QDomDocument>
 #include <prettify.h>
 #include"Compression.h"
+#include "XMLToJson.h"
 extern  HuffmanTree root;
 
 QT_BEGIN_NAMESPACE
