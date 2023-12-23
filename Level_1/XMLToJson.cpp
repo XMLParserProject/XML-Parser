@@ -39,8 +39,6 @@ string XMLToJson::convertToJson(){
             level--;
             output+= addQuotes(elements[i].substr(4,elements[i].length()-4)) ;
             output[mark]= '\0';
-            if(!openedBrackets.empty())
-                openedBrackets.pop();
             if(i < (elements.size()-1) && elements[i+1].length() > 0 && (elements[i+1][0] != '/')){
                 output+=',';
             }
@@ -56,8 +54,6 @@ string XMLToJson::convertToJson(){
                 level++;
             if(i>0 && ((elements[i-1].length()>3) && (elements[i-1].substr(0,4) == ";<?>") || elements[i-1][0] == '/')){
                 output[mark]= '\0';
-                if(!openedBrackets.empty())
-                openedBrackets.pop();
                 level--;
             }
             level++;
