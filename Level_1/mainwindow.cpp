@@ -155,21 +155,20 @@ void MainWindow::on_label_linkActivated(const QString &link)
 
 void MainWindow::on_correctErrorsButton_clicked()
 {
+    CorrectErrors correct_xml;
     QString xmlcontent = xmlParser.getxmlcontent();
+    QString correctedXML=correct_xml.correct_errors(xmlcontent);
 
 
-
-
-
-
-
+    xmlParser.setXMLContent(correctedXML);
 
     QLabel *correctErrors = new QLabel(this);
-    correctErrors->setText(xmlcontent);
+    correctErrors->setText(correctedXML);
     correctErrors->setWordWrap(true);
 
     ui->scrollArea_2->setWidget(correctErrors);
     ui->scrollArea_2->setWidgetResizable(true);
+
 }
 
 void MainWindow::on_PrettifyingButton_clicked()

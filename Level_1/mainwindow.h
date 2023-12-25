@@ -26,6 +26,9 @@
 #include <prettify.h>
 #include"Compression.h"
 #include "XMLToJson.h"
+#include "correcterrors.h"
+
+
 extern  HuffmanTree root;
 
 QT_BEGIN_NAMESPACE

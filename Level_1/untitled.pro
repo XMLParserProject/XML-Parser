@@ -13,6 +13,7 @@ SOURCES += \
     Helpers.cpp \
     Tree.cpp \
     XMLToJson.cpp \
+    correcterrors.cpp \
     globals.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -24,6 +25,7 @@ HEADERS += \
     Helpers.h \
     Tree.h \
     XMLToJson.h \
+    correcterrors.h \
     globals.h \
     mainwindow.h \
     prettify.h \
