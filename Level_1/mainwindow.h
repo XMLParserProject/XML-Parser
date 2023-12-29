@@ -29,6 +29,7 @@
 #include "correcterrors.h"
 
 
+
 extern  HuffmanTree root;
 
 QT_BEGIN_NAMESPACE
@@ -66,7 +67,13 @@ private slots:
 
     void on_DecompressButton_clicked();
 
-    void on_SavejasonButton_clicked();
+    void on_SocialNetworkAnalysis_clicked();
+
+    void on_mutualUsers_clicked();
+
+    void on_showSuggestions_clicked();
+
+    void on_postSearch_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -76,6 +83,7 @@ private:
     void highlightXmlMistakes(QTextBrowser* xmlBrowser, const QString& xmlContent);
     void highlightTagError(QTextCursor& cursor, const QString& xmlContent, int errorStart, int errorEnd);
     void moveToNextError(const QString& xmlContent, int& errorEnd, int& errorStart);
+
 
 
 };

@@ -268,8 +268,129 @@ void MainWindow::on_DecompressButton_clicked()
 }
 
 
-void MainWindow::on_SavejasonButton_clicked()
-{
 
+
+void MainWindow::on_SocialNetworkAnalysis_clicked()
+{
+    QString xmlcontent = xmlParser.getxmlcontent();
+
+
+
+
+
+    QDialog *newDialog = new QDialog(this);
+    newDialog->setFixedSize(500, 400);
+    newDialog->setWindowTitle("Social Network Analysis");
+    QScrollArea *dataScrollArea = new QScrollArea(newDialog);
+    QLabel *label = new QLabel(xmlcontent, newDialog);
+    dataScrollArea->setWidget(label);
+    dataScrollArea->setWidgetResizable(true);
+    newDialog->exec();
+}
+
+
+void MainWindow::on_mutualUsers_clicked()
+{
+    QDialog *inputDialog = new QDialog(this);
+    inputDialog->setFixedSize(300, 150);
+    inputDialog->setWindowTitle("Mutual users");
+    QVBoxLayout *layout = new QVBoxLayout(inputDialog);
+    QLabel *labelFirstID = new QLabel("Enter First ID:", inputDialog);
+    QLineEdit *lineEditFirstID = new QLineEdit(inputDialog);
+    QLabel *labelSecondID = new QLabel("Enter Second ID:", inputDialog);
+    QLineEdit *lineEditSecondID = new QLineEdit(inputDialog);
+    layout->addWidget(labelFirstID);
+    layout->addWidget(lineEditFirstID);
+    layout->addWidget(labelSecondID);
+    layout->addWidget(lineEditSecondID);
+    QPushButton *submitButton = new QPushButton("Submit", inputDialog);
+    layout->addWidget(submitButton);
+    connect(submitButton, &QPushButton::clicked, [this, inputDialog, lineEditFirstID, lineEditSecondID]() {
+        int firstID = lineEditFirstID->text().toInt();
+        int secondID = lineEditSecondID->text().toInt();
+
+        // Perform your logic with the entered IDs HEREEEE AND PUT THE RESULTS IN THIS resultString
+       QString resultString = "THE ID of the first is " + QString::number(firstID) + " and that of the second is: " + QString::number(secondID);
+
+
+
+        QDialog *resultDialog = new QDialog(this);
+        resultDialog->setFixedSize(300, 150);
+        resultDialog->setWindowTitle("Mutual between two users");
+        QVBoxLayout *resultLayout = new QVBoxLayout(resultDialog);
+        QLabel *resultLabel = new QLabel(resultString, resultDialog);
+        resultLayout->addWidget(resultLabel);
+        resultDialog->exec();
+        inputDialog->close();
+    });
+    inputDialog->exec();
+}
+
+
+
+
+void MainWindow::on_showSuggestions_clicked()
+{
+    QDialog *inputDialog = new QDialog(this);
+    inputDialog->setFixedSize(300, 150);
+    inputDialog->setWindowTitle("Suggestions");
+    QVBoxLayout *layout = new QVBoxLayout(inputDialog);
+    QLabel *labelFirstID = new QLabel("Enter The user's ID:", inputDialog);
+    QLineEdit *lineEditFirstID = new QLineEdit(inputDialog);
+    layout->addWidget(labelFirstID);
+    layout->addWidget(lineEditFirstID);
+    QPushButton *submitButton = new QPushButton("Submit", inputDialog);
+    layout->addWidget(submitButton);
+    connect(submitButton, &QPushButton::clicked, [this, inputDialog, lineEditFirstID]() {
+        int ID = lineEditFirstID->text().toInt();
+
+        // Perform your logic with the entered IDs HEREEEE AND PUT THE RESULTS IN THIS resultString
+        QString resultString = "THE ID of the first is " + QString::number(ID) ;
+
+
+
+        QDialog *resultDialog = new QDialog(this);
+        resultDialog->setFixedSize(300, 150);
+        resultDialog->setWindowTitle("Mutual between two users");
+        QVBoxLayout *resultLayout = new QVBoxLayout(resultDialog);
+        QLabel *resultLabel = new QLabel(resultString, resultDialog);
+        resultLayout->addWidget(resultLabel);
+        resultDialog->exec();
+        inputDialog->close();
+    });
+    inputDialog->exec();
+}
+
+
+void MainWindow::on_postSearch_clicked()
+{
+    QDialog *inputDialog = new QDialog(this);
+    inputDialog->setFixedSize(300, 150);
+    inputDialog->setWindowTitle("Post search");
+    QVBoxLayout *layout = new QVBoxLayout(inputDialog);
+    QLabel *post = new QLabel("Enter a post:", inputDialog);
+    QLineEdit *postText = new QLineEdit(inputDialog);
+    layout->addWidget(post);
+    layout->addWidget(postText);
+    QPushButton *submitButton = new QPushButton("Submit", inputDialog);
+    layout->addWidget(submitButton);
+    connect(submitButton, &QPushButton::clicked, [this, inputDialog, postText]() {
+        string post = postText->text().toStdString();
+
+        // Perform your logic with the entered IDs HEREEEE AND PUT THE RESULTS IN THIS resultString
+        QString resultString = QString::fromStdString(post);
+
+
+
+        QDialog *resultDialog = new QDialog(this);
+        resultDialog->setFixedSize(300, 150);
+        resultDialog->setWindowTitle("Mutual between two users");
+        QVBoxLayout *resultLayout = new QVBoxLayout(resultDialog);
+        QLabel *resultLabel = new QLabel(resultString, resultDialog);
+        resultLayout->addWidget(resultLabel);
+        resultDialog->exec();
+        inputDialog->close();
+    });
+    inputDialog->exec();
 }
 
