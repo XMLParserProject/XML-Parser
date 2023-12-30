@@ -3,15 +3,13 @@
 
 #include <iostream>
 #include <string>
-#include <stack>
 #include "Helpers.h"
-#include "Tree.h"
 
-// Using the std namespace
 using namespace std;
 
 class XMLToJson {
 private:
+    Helpers helper;
     string XMLText = "";
     string jsonText = "";
 
@@ -20,12 +18,6 @@ private:
 
     // Convert XML to JSON
     string convertToJson();
-
-    // Convert XML to a tree structure
-    Tree convertToTree();
-
-    // Convert the tree structure to a vector of elements
-    vector<string> ToVector(string XMLTree);
 
     // Add double quotes to an element
     string addQuotes(string element);
