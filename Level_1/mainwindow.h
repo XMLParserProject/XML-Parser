@@ -27,6 +27,9 @@
 #include"Compression.h"
 #include "XMLToJson.h"
 #include "correcterrors.h"
+#include "GraphViewer.h"
+#include "GraphDialog.h"
+#include "graph.h"
 
 
 
@@ -74,6 +77,12 @@ private slots:
     void on_showSuggestions_clicked();
 
     void on_postSearch_clicked();
+
+    void on_graphVisualization_clicked();
+
+    void on_undoButton_clicked();
+
+    void on_redoButton_clicked();
 
 private:
     Ui::MainWindow *ui;

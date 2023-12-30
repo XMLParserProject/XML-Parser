@@ -9,6 +9,9 @@
 HuffmanTree root;
 XMLParser xmlParser;
 Prettify prettify;
+QStack<QString> undo;
+QStack<QString> redo;
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -34,7 +37,7 @@ void MainWindow::on_loadFileButton_clicked() {
 
             // Set the XML content in the parser
             xmlParser.setXMLContent(xmlContent);
-
+            undo.push(xmlContent);
             // Check consistency and handle the result
             if (xmlParser.checkConsistency()) {
                 // XML is consistent, show in a new scroll area
@@ -57,7 +60,7 @@ void MainWindow::on_enterXmlButton_clicked() {
     if (ok && !xmlContent.isEmpty()) {
         // Set the XML content in the parser
         xmlParser.setXMLContent(xmlContent);
-
+        undo.push(xmlContent);
         // Check consistency and handle the result
         if (xmlParser.checkConsistency()) {
             // XML is consistent, show in a new scroll area
@@ -160,7 +163,7 @@ void MainWindow::on_correctErrorsButton_clicked()
     QString xmlcontent = xmlParser.getxmlcontent();
     QString correctedXML=correct_xml.correct_errors(xmlcontent);
 
-
+    undo.push(correctedXML);
     xmlParser.setXMLContent(correctedXML);
 
     QLabel *correctErrors = new QLabel(this);
@@ -176,6 +179,7 @@ void MainWindow::on_PrettifyingButton_clicked()
 {
     QString xmlcontent = xmlParser.getxmlcontent();
     QString prettifiedXml = prettify.prettifyXml(xmlcontent);
+    undo.push(prettifiedXml);
     xmlParser.setXMLContent(prettifiedXml);
     QLabel *PrettifyingLabel = new QLabel(this);
     PrettifyingLabel->setText(prettifiedXml);
@@ -192,7 +196,7 @@ void MainWindow::on_ConvertToJsonButton_clicked()
     //
     XMLToJson json(xmlcontent.toStdString());
     string jsonText=json.getJSONText();
-    // 
+    undo.push(QString::fromStdString(jsonText));
     QLabel *ConvertToJsonLabel = new QLabel(this);
     ConvertToJsonLabel->setText(QString::fromStdString(jsonText));
     ConvertToJsonLabel->setWordWrap(true);
@@ -209,7 +213,7 @@ void MainWindow::on_MinifyingButton_clicked()
     Helpers helper;
     string minifiedString = helper.removeUnwantedSpaces(xmlcontent.toStdString());
     // 
-
+    undo.push(QString::fromStdString(minifiedString));
     QLabel *MinifyingLabel = new QLabel(this);
     MinifyingLabel->setText(QString::fromStdString(minifiedString));
     MinifyingLabel->setWordWrap(true);
@@ -227,7 +231,7 @@ void MainWindow::on_compressButton_clicked()
 
     string compress_data=root.compress(unSpaceXML);
 
-
+    undo.push(QString::fromStdString(compress_data));
     QLabel *compressLabel = new QLabel(this);
     compressLabel->setText(QString::fromStdString(compress_data));
     compressLabel->setWordWrap(true);
@@ -259,7 +263,7 @@ void MainWindow::on_DecompressButton_clicked()
     string binarydata=root.charToBinaryString(encodedData);
     HuffmanNode* TreeRoot =root.getTreeRoot();
     string decodedData=root.decodeData(binarydata,TreeRoot);
-
+    undo.push(QString::fromStdString(decodedData));
     QLabel *DecompressLabel  = new QLabel(this);
     DecompressLabel->setText(QString::fromStdString(decodedData));
     DecompressLabel->setWordWrap(true);
@@ -286,10 +290,9 @@ void MainWindow::on_SocialNetworkAnalysis_clicked()
     QDialog *newDialog = new QDialog(this);
     newDialog->setFixedSize(500, 400);
     newDialog->setWindowTitle("Social Network Analysis");
-    QScrollArea *dataScrollArea = new QScrollArea(newDialog);
+    QVBoxLayout *resultLayout = new QVBoxLayout(newDialog);
     QLabel *label = new QLabel(QString::fromStdString(analysis), newDialog);
-    dataScrollArea->setWidget(label);
-    dataScrollArea->setWidgetResizable(true);
+    resultLayout->addWidget(label);
     newDialog->exec();
 }
 
@@ -320,13 +323,12 @@ void MainWindow::on_mutualUsers_clicked()
         graph=createGraphOfUsers(xmlcontent.toStdString());
         string mutual_friend=graph.print_mutual_followers(firstID,secondID);
 
-        // Perform your logic with the entered IDs HEREEEE AND PUT THE RESULTS IN THIS resultString
        QString resultString = QString::fromStdString(mutual_friend);
 
 
 
         QDialog *resultDialog = new QDialog(this);
-        resultDialog->setFixedSize(300, 150);
+        resultDialog->setFixedSize(500, 400);
         resultDialog->setWindowTitle("Mutual between two users");
         QVBoxLayout *resultLayout = new QVBoxLayout(resultDialog);
         QLabel *resultLabel = new QLabel(resultString, resultDialog);
@@ -360,13 +362,12 @@ void MainWindow::on_showSuggestions_clicked()
         graph=createGraphOfUsers(xmlcontent.toStdString());
         string suggest_friend=graph.print_follow_suggestion(ID);
 
-        // Perform your logic with the entered IDs HEREEEE AND PUT THE RESULTS IN THIS resultString
         QString resultString = QString::fromStdString(suggest_friend) ;
 
 
 
         QDialog *resultDialog = new QDialog(this);
-        resultDialog->setFixedSize(300, 150);
+        resultDialog->setFixedSize(500, 400);
         resultDialog->setWindowTitle("Mutual between two users");
         QVBoxLayout *resultLayout = new QVBoxLayout(resultDialog);
         QLabel *resultLabel = new QLabel(resultString, resultDialog);
@@ -398,20 +399,82 @@ void MainWindow::on_postSearch_clicked()
         graph=createGraphOfUsers(xmlcontent.toStdString());
         string related_post=graph.print_post_search(post);
 
-        // Perform your logic with the entered IDs HEREEEE AND PUT THE RESULTS IN THIS resultString
         QString resultString = QString::fromStdString(related_post);
 
 
 
         QDialog *resultDialog = new QDialog(this);
-        resultDialog->setFixedSize(300, 150);
-        resultDialog->setWindowTitle("Mutual between two users");
+        resultDialog->setFixedSize(600, 500);
+        resultDialog->setWindowTitle("Post search result");
+        QScrollArea *scrollArea = new QScrollArea(resultDialog);
+        QLabel *resultLabel = new QLabel(resultString, scrollArea);
+        resultLabel->setWordWrap(true);
+
+        scrollArea->setWidget(resultLabel);
+        scrollArea->setWidgetResizable(true);
+        scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+        scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+
         QVBoxLayout *resultLayout = new QVBoxLayout(resultDialog);
-        QLabel *resultLabel = new QLabel(resultString, resultDialog);
-        resultLayout->addWidget(resultLabel);
+        resultLayout->addWidget(scrollArea);
+
         resultDialog->exec();
         inputDialog->close();
     });
     inputDialog->exec();
+}
+
+
+void MainWindow::on_graphVisualization_clicked()
+{
+    QString xmlcontent = xmlParser.getxmlcontent();
+    Graph graph;
+    graph=createGraphOfUsers(xmlcontent.toStdString());
+    unordered_map<string, vector<string>> dataToVisualize = graph.get_follower_edge();
+    GraphDialog *graphDialog = new GraphDialog(dataToVisualize, this);
+
+    graphDialog->setWindowTitle("Graph Visualization");
+
+
+    graphDialog->exec();
+}
+
+
+void MainWindow::on_undoButton_clicked()
+{
+    if(!undo.empty()){
+        redo.push(undo.top());
+        undo.pop();
+        QString previousString = undo.top();
+
+        QLabel *UndoLabel = new QLabel(this);
+        UndoLabel->setText(previousString);
+        UndoLabel->setWordWrap(true);
+        ui->scrollArea_2->setWidget(UndoLabel);
+        ui->scrollArea_2->setWidgetResizable(true);
+    }else{
+        qDebug()<<"No operation to be undone";
+    }
+}
+
+
+void MainWindow::on_redoButton_clicked()
+{
+    QString previousString;
+    if(!redo.empty()){
+        previousString = redo.top();
+        undo.push(redo.top());
+        redo.pop();
+        QLabel *RedoLabel = new QLabel(this);
+        RedoLabel->setText(previousString);
+        RedoLabel->setWordWrap(true);
+        ui->scrollArea_2->setWidget(RedoLabel);
+        ui->scrollArea_2->setWidgetResizable(true);
+
+    }else{
+    qDebug()<<"No operation to be redone";
+}
+
+
 }
 

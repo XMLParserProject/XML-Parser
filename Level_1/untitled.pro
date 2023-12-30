@@ -10,6 +10,8 @@ CONFIG += c++17
 
 SOURCES += \
     Compression.cpp \
+    GraphDialog.cpp \
+    GraphViewer.cpp \
     Helpers.cpp \
     XMLToJson.cpp \
     correcterrors.cpp \
@@ -23,6 +25,8 @@ SOURCES += \
 
 HEADERS += \
     Compression.h \
+    GraphDialog.h \
+    GraphViewer.h \
     Helpers.h \
     XMLToJson.h \
     correcterrors.h \
