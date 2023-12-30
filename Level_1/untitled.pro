@@ -15,9 +15,11 @@ SOURCES += \
     XMLToJson.cpp \
     correcterrors.cpp \
     globals.cpp \
+    graph.cpp \
     main.cpp \
     mainwindow.cpp \
     prettify.cpp \
+    user.cpp \
     xmlparser.cpp
 
 HEADERS += \
@@ -27,8 +29,10 @@ HEADERS += \
     XMLToJson.h \
     correcterrors.h \
     globals.h \
+    graph.h \
     mainwindow.h \
     prettify.h \
+    user.h \
     xmlparser.h
 
 FORMS += \

@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "globals.h"
 #include"Helpers.h"
+#include"graph.h"
 #include <QDebug>
 
 
@@ -273,16 +274,20 @@ void MainWindow::on_DecompressButton_clicked()
 void MainWindow::on_SocialNetworkAnalysis_clicked()
 {
     QString xmlcontent = xmlParser.getxmlcontent();
-
-
-
+    Graph graph;
+    graph=createGraphOfUsers(xmlcontent.toStdString());
+    User user = graph.most_influencer();
+    string influencer="Most Influencer:\n\t" + user.getName() + "\n\tID: (" + user.getID() + ")";
+    user=graph.most_active();
+    string active_user="Most Active:\n\t" + user.getName() + "\n\tID: (" + user.getID() + ")";
+    string analysis=influencer+"\n\n"+active_user;
 
 
     QDialog *newDialog = new QDialog(this);
     newDialog->setFixedSize(500, 400);
     newDialog->setWindowTitle("Social Network Analysis");
     QScrollArea *dataScrollArea = new QScrollArea(newDialog);
-    QLabel *label = new QLabel(xmlcontent, newDialog);
+    QLabel *label = new QLabel(QString::fromStdString(analysis), newDialog);
     dataScrollArea->setWidget(label);
     dataScrollArea->setWidgetResizable(true);
     newDialog->exec();
@@ -291,6 +296,7 @@ void MainWindow::on_SocialNetworkAnalysis_clicked()
 
 void MainWindow::on_mutualUsers_clicked()
 {
+
     QDialog *inputDialog = new QDialog(this);
     inputDialog->setFixedSize(300, 150);
     inputDialog->setWindowTitle("Mutual users");
@@ -306,11 +312,16 @@ void MainWindow::on_mutualUsers_clicked()
     QPushButton *submitButton = new QPushButton("Submit", inputDialog);
     layout->addWidget(submitButton);
     connect(submitButton, &QPushButton::clicked, [this, inputDialog, lineEditFirstID, lineEditSecondID]() {
-        int firstID = lineEditFirstID->text().toInt();
-        int secondID = lineEditSecondID->text().toInt();
+        string firstID = lineEditFirstID->text().toStdString();
+        string secondID = lineEditSecondID->text().toStdString();
+
+        QString xmlcontent = xmlParser.getxmlcontent();
+        Graph graph;
+        graph=createGraphOfUsers(xmlcontent.toStdString());
+        string mutual_friend=graph.print_mutual_followers(firstID,secondID);
 
         // Perform your logic with the entered IDs HEREEEE AND PUT THE RESULTS IN THIS resultString
-       QString resultString = "THE ID of the first is " + QString::number(firstID) + " and that of the second is: " + QString::number(secondID);
+       QString resultString = QString::fromStdString(mutual_friend);
 
 
 
@@ -342,10 +353,15 @@ void MainWindow::on_showSuggestions_clicked()
     QPushButton *submitButton = new QPushButton("Submit", inputDialog);
     layout->addWidget(submitButton);
     connect(submitButton, &QPushButton::clicked, [this, inputDialog, lineEditFirstID]() {
-        int ID = lineEditFirstID->text().toInt();
+        string ID = lineEditFirstID->text().toStdString();
+
+        QString xmlcontent = xmlParser.getxmlcontent();
+        Graph graph;
+        graph=createGraphOfUsers(xmlcontent.toStdString());
+        string suggest_friend=graph.print_follow_suggestion(ID);
 
         // Perform your logic with the entered IDs HEREEEE AND PUT THE RESULTS IN THIS resultString
-        QString resultString = "THE ID of the first is " + QString::number(ID) ;
+        QString resultString = QString::fromStdString(suggest_friend) ;
 
 
 
@@ -377,8 +393,13 @@ void MainWindow::on_postSearch_clicked()
     connect(submitButton, &QPushButton::clicked, [this, inputDialog, postText]() {
         string post = postText->text().toStdString();
 
+        QString xmlcontent = xmlParser.getxmlcontent();
+        Graph graph;
+        graph=createGraphOfUsers(xmlcontent.toStdString());
+        string related_post=graph.print_post_search(post);
+
         // Perform your logic with the entered IDs HEREEEE AND PUT THE RESULTS IN THIS resultString
-        QString resultString = QString::fromStdString(post);
+        QString resultString = QString::fromStdString(related_post);
 
 
 
