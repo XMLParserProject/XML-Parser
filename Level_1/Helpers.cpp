@@ -1,7 +1,6 @@
 #include "Helpers.h"
 
 
-// if you use this method in any incorrect xml text it will output error
 
 string Helpers::removeUnwantedSpaces(string XMLText) {
     string output = "";
@@ -12,14 +11,13 @@ string Helpers::removeUnwantedSpaces(string XMLText) {
     for (int i = startOfXML + 1; i < XMLText.length(); i++) {
 
         if (XMLText[i] == ' ' || XMLText[i] == '\n') {
-            if (previousCharacter == ' ' || previousCharacter == '<' || previousCharacter == '>') {
+            if (previousCharacter == ' ' || previousCharacter == '<' || previousCharacter == '>' || previousCharacter == '/' || previousCharacter == '?') {
                 continue;
             }
             output += ' ';
-        }else if(XMLText[i] == '<' || XMLText[i] == '>' || (XMLText[i] == '?' && i<XMLText.length()-1 && XMLText[i+1]== '>')  || (XMLText[i] == '?' && i>0 && XMLText[i-1]== '<')) {
+        }else if(XMLText[i] == '<' || XMLText[i] == '>' || (XMLText[i] == '?' && i<XMLText.length()-1 && XMLText[i+1]== '>') || (XMLText[i] == '/' && i<XMLText.length()-1 && XMLText[i+1]== '>')) {
             if (previousCharacter == ' ') {
-                output = output.substr(0, output.length() - 1);
-                output += XMLText[i];
+                output[output.length() - 1] = XMLText[i];
             } else {
                 output += XMLText[i];
             }
@@ -32,13 +30,6 @@ string Helpers::removeUnwantedSpaces(string XMLText) {
 
     return output;
 }
-
-void Helpers::saveFile(string text,string path){
-    ofstream outfile (path);
-    outfile << text << endl;
-    outfile.close();
-}
-
 string Helpers::convertXML(const string& input) {
 		int attributePos = input.find(" ");
 		if (attributePos == -1) {
@@ -88,5 +79,66 @@ string Helpers::prepare(string XMLText){
         }
                 secondPointer++;
     }
-        return output;
-    }
+        return output;
+    }
+vector<string> Helpers::convertXMLToVector(string XMLText){
+    vector<string> xmlVector;
+    int firstPointer=0;
+    int secondPointer=0;
+    string lastvalue="";
+    char currentCharacter;
+    bool betweenBrackets=false;
+    stack<string> openedtages;
+
+        while(secondPointer < XMLText.length()){
+        currentCharacter = XMLText[secondPointer];
+        if(currentCharacter == '<'){
+            secondPointer++;
+            firstPointer=secondPointer;
+            betweenBrackets=true;
+        }else if(currentCharacter == '>' && betweenBrackets){
+            if(XMLText[firstPointer] == '/'){
+                string closedtag = XMLText.substr(firstPointer+1,secondPointer - firstPointer - 1);
+                if(closedtag == openedtages.top()){
+                    if(lastvalue.length()>0){
+                        xmlVector.push_back(";<?>"+lastvalue);
+                        lastvalue="";
+                    }
+                    else
+                        xmlVector.push_back("/"+closedtag);
+                }
+                openedtages.pop();
+            }else{
+                string openedtag=XMLText.substr(firstPointer,secondPointer - firstPointer);
+                if(XMLText[secondPointer-1] != '/'){
+                if(openedtag.find(' '))
+                    openedtag = openedtag.substr(0,openedtag.find(' '));
+
+                if(openedtag != "xml" && openedtag != "?xml"){                      
+                    xmlVector.push_back(openedtag);
+                openedtages.push(openedtag);
+                } 
+                }
+            }
+            betweenBrackets=false;
+            firstPointer=secondPointer+1;
+        }else{
+            if(!betweenBrackets && XMLText[secondPointer+1] == '<')
+                lastvalue = XMLText.substr(firstPointer,secondPointer - firstPointer + 1);
+        }
+        secondPointer++;
+    }
+
+    return xmlVector;
+
+}
+string Helpers::addQuotes(string element){
+    return "\"" + element + "\"";
+}
+
+
+void Helpers::saveFile(string text,string path){
+    ofstream outfile (path);
+    outfile << text << endl;
+    outfile.close();
+}
