@@ -167,3 +167,81 @@ void Graph::print()
         cout << "===================================" << endl;
     }
 }
+
+
+Graph createGraphOfUsers(string xmlText) {
+    Graph ouput;
+    Helpers helper;
+    xmlText = helper.prepare(xmlText);
+    vector<string> elements = helper.convertXMLToVector(xmlText);
+    string name = "", id = "", postBody = "";
+
+    for (int i = 0; i < elements.size(); i++) {
+        if (elements[i] == "user" || elements[i] == "_user") {
+            vector<pair<string, vector<string>>> posts;
+            vector<string>followers;
+            string closeUser = '/' + elements[i];
+            i++;
+            while (elements[i] != closeUser) {
+                if (elements[i] == "name" || elements[i] == "_name") {
+                    i++;
+                    if (elements[i].substr(0, 4) == ";<?>") {
+                        name = elements[i].substr(4, elements[i].length() - 4);
+                    }
+                }
+                else if (elements[i] == "id" || elements[i] == "_id") {
+                    i++;
+                    if (elements[i].substr(0, 4) == ";<?>") {
+                        id = elements[i].substr(4, elements[i].length() - 4);
+                    }
+                }
+                else if (elements[i] == "followers" || elements[i] == "_followers") {
+                    string closeFollowers = '/' + elements[i];
+                    i++;
+                    while (elements[i] != closeFollowers) {
+                        if (elements[i].substr(0, 4) == ";<?>") {
+                            followers.push_back(elements[i].substr(4, elements[i].length() - 4));
+                        }
+                        i++;
+                    }
+                }
+                else if (elements[i] == "posts" || elements[i] == "_posts") {
+                    string closePosts = '/' + elements[i];
+                    i++;
+                    while (elements[i] != closePosts) {
+                        if (elements[i] == "post" || elements[i] == "_post") {
+                            vector<string> postTopics;
+                            string closePost = '/' + elements[i];
+                            i++;
+                            if (elements[i].substr(0, 4) == ";<?>") {
+                                postBody = elements[i].substr(4, elements[i].length() - 4);
+                            }
+                            while (elements[i] != closePost) {
+                                if (elements[i] == "topic" || elements[i] == "_topic") {
+                                    i++;
+                                    if (elements[i].substr(0, 4) == ";<?>") {
+                                        postTopics.push_back(elements[i].substr(4, elements[i].length() - 4));
+                                    }
+                                }
+                                else if (elements[i] == "body" || elements[i] == "_body") {
+                                    i++;
+                                    if (elements[i].substr(0, 4) == ";<?>") {
+                                        postBody = elements[i].substr(4, elements[i].length() - 4);
+                                    }
+                                }
+                                i++;
+                            }
+                            posts.push_back(make_pair(postBody, postTopics));
+                        }
+                        i++;
+                    }
+                }
+                i++;
+            }
+            User user(name, id, followers, posts);
+            // user.print_user();
+            ouput.addUser(user);
+        }
+    }
+    return ouput;
+}
