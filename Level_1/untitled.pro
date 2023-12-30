@@ -11,7 +11,6 @@ CONFIG += c++17
 SOURCES += \
     Compression.cpp \
     Helpers.cpp \
-    Tree.cpp \
     XMLToJson.cpp \
     correcterrors.cpp \
     globals.cpp \
@@ -25,7 +24,6 @@ SOURCES += \
 HEADERS += \
     Compression.h \
     Helpers.h \
-    Tree.h \
     XMLToJson.h \
     correcterrors.h \
     globals.h \
