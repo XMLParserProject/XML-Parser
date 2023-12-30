@@ -4,6 +4,7 @@
 #include <vector>
 #include <stack>
 
+
 using namespace std;
 
 class Helpers {
@@ -20,5 +21,6 @@ public:
 
     string addQuotes(string element);
 
-    void saveFile(string text,string path);
+    void saveFile(string text, string path);
 };
+
