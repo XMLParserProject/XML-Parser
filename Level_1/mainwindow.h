@@ -84,6 +84,8 @@ private slots:
 
     void on_redoButton_clicked();
 
+    void on_saveButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     void displayXmlContent(const QString& xmlContent);

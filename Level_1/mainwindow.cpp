@@ -290,9 +290,17 @@ void MainWindow::on_SocialNetworkAnalysis_clicked()
     QDialog *newDialog = new QDialog(this);
     newDialog->setFixedSize(500, 400);
     newDialog->setWindowTitle("Social Network Analysis");
+    //
+    QScrollArea *scrollArea = new QScrollArea(newDialog);
+    QLabel *resultLabel = new QLabel(QString::fromStdString(analysis), scrollArea);
+    resultLabel->setWordWrap(true);
+    scrollArea->setWidget(resultLabel);
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     QVBoxLayout *resultLayout = new QVBoxLayout(newDialog);
-    QLabel *label = new QLabel(QString::fromStdString(analysis), newDialog);
-    resultLayout->addWidget(label);
+    resultLayout->addWidget(scrollArea);
+
     newDialog->exec();
 }
 
@@ -330,9 +338,15 @@ void MainWindow::on_mutualUsers_clicked()
         QDialog *resultDialog = new QDialog(this);
         resultDialog->setFixedSize(500, 400);
         resultDialog->setWindowTitle("Mutual between two users");
+        QScrollArea *scrollArea = new QScrollArea(resultDialog);
+        QLabel *resultLabel = new QLabel(resultString, scrollArea);
+        resultLabel->setWordWrap(true);
+        scrollArea->setWidget(resultLabel);
+        scrollArea->setWidgetResizable(true);
+        scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+        scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
         QVBoxLayout *resultLayout = new QVBoxLayout(resultDialog);
-        QLabel *resultLabel = new QLabel(resultString, resultDialog);
-        resultLayout->addWidget(resultLabel);
+        resultLayout->addWidget(scrollArea);
         resultDialog->exec();
         inputDialog->close();
     });
@@ -369,9 +383,16 @@ void MainWindow::on_showSuggestions_clicked()
         QDialog *resultDialog = new QDialog(this);
         resultDialog->setFixedSize(500, 400);
         resultDialog->setWindowTitle("Mutual between two users");
+        QScrollArea *scrollArea = new QScrollArea(resultDialog);
+        QLabel *resultLabel = new QLabel(resultString, scrollArea);
+        resultLabel->setWordWrap(true);
+
+        scrollArea->setWidget(resultLabel);
+        scrollArea->setWidgetResizable(true);
+        scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+        scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
         QVBoxLayout *resultLayout = new QVBoxLayout(resultDialog);
-        QLabel *resultLabel = new QLabel(resultString, resultDialog);
-        resultLayout->addWidget(resultLabel);
+        resultLayout->addWidget(scrollArea);
         resultDialog->exec();
         inputDialog->close();
     });
@@ -476,5 +497,25 @@ void MainWindow::on_redoButton_clicked()
 }
 
 
+}
+
+
+void MainWindow::on_saveButton_clicked()
+{
+    QString saveFile = undo.top();
+    QString filePath = QFileDialog::getSaveFileName(this, tr("Save XML File"), QDir::homePath(), tr("XML Files (*.xml)"));
+
+    // Save compressed data to the chosen file
+    if (!filePath.isEmpty()) {
+        QFile file(filePath);
+        if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            QTextStream stream(&file);
+            stream <<saveFile;
+            file.close();
+        } else {
+            // Handle error opening the file
+            qDebug() << "Error opening file for writing:" << file.errorString();
+        }
+    }
 }
 
