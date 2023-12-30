@@ -30,4 +30,4 @@ public:
     string print_follow_suggestion(string id);
     string print_post_search(string topic);
 };
-
+Graph createGraphOfUsers(string xmlText);
