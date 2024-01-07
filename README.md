@@ -12,3 +12,6 @@ The project is divided into 2 main levels:
 
   
 •	The second level involves analyzing and visualizing XML data, particularly for social network analysis, providing insights into relationships and patterns between elements within the structured information.
+
+
+![image](https://github.com/XMLParserProject/XML-Parser/assets/69548206/bbba6c94-9c0e-4c3d-8b24-4cc886360d3c)
