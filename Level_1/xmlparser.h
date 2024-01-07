@@ -10,7 +10,7 @@
 class XMLParser {
 public:
     XMLParser();
-    void setXMLContent(const QString& content);
+    void setXMLContent(QString& content);
     bool checkConsistency();
     QString getxmlcontent();
 
