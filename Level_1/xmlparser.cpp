@@ -5,8 +5,9 @@ XMLParser::XMLParser() {
     // Initialization if needed
 }
 
-void XMLParser::setXMLContent(const QString& content) {
-    xmlContent = content;
+void XMLParser::setXMLContent(QString& content) {
+    Helpers helper;
+    xmlContent = QString::fromStdString(helper.removeUnwantedSpaces(content.toStdString()));
 }
 
 bool XMLParser::checkConsistency() {
@@ -28,6 +29,18 @@ bool XMLParser::checkConsistency() {
             int startTagName = index + (isStartTag ? 1 : 2);  // Adjust index for start/end tags
             int endTagName = xmlContent.indexOf('>', startTagName);
             QString tagName = xmlContent.mid(startTagName, endTagName - startTagName).trimmed();
+
+            if(tagName[tagName.size()-1]=='/'){
+                index = endTagName + 1;
+                continue;
+            }
+            if (tagName.toStdString().find(" ") != -1) {
+                tagName = QString::fromStdString(tagName.toStdString().substr(0, tagName.toStdString().find(" "))) ;
+                if(tagName.toLower()=="?xml"){
+                    index = endTagName + 1;
+                    continue;
+                }
+            }
 
             if (isStartTag) {
                 tagStack.push(tagName);
