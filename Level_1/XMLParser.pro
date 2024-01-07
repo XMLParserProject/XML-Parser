@@ -15,6 +15,7 @@ SOURCES += \
     Helpers.cpp \
     XMLToJson.cpp \
     correcterrors.cpp \
+    displayproblematicxml.cpp \
     globals.cpp \
     graph.cpp \
     main.cpp \
@@ -30,6 +31,7 @@ HEADERS += \
     Helpers.h \
     XMLToJson.h \
     correcterrors.h \
+    displayproblematicxml.h \
     globals.h \
     graph.h \
     mainwindow.h \

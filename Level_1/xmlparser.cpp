@@ -1,7 +1,6 @@
 #include "xmlparser.h"
 
 
-
 XMLParser::XMLParser() {
     // Initialization if needed
 }
