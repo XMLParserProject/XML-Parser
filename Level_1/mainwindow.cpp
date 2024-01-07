@@ -5,7 +5,7 @@
 #include"graph.h"
 #include <QDebug>
 
-
+// Global instances
 HuffmanTree root;
 XMLParser xmlParser;
 Prettify prettify;
@@ -26,7 +26,9 @@ MainWindow::~MainWindow()
 }
 
 
+// handling loading XML from a file
 void MainWindow::on_loadFileButton_clicked() {
+    // Open a file dialog to choose an XML file
     QString filePath = QFileDialog::getOpenFileName(this, "Choose an XML file", QString(), "XML Files (*.xml)");
 
     if (!filePath.isEmpty()) {
@@ -53,6 +55,7 @@ void MainWindow::on_loadFileButton_clicked() {
     }
 }
 
+// Function to handle entering XML manually
 void MainWindow::on_enterXmlButton_clicked() {
     bool ok;
     QString xmlContent = QInputDialog::getText(this, "Enter XML Content", "XML Content:", QLineEdit::Normal, "", &ok);
@@ -72,6 +75,7 @@ void MainWindow::on_enterXmlButton_clicked() {
     }
 }
 
+// Function to display XML content in a scroll area
 void MainWindow::displayXmlContent(const QString& xmlContent)
 {
     // Create a new QLabel to display the XML content
@@ -93,6 +97,7 @@ void MainWindow::displayXmlContent(const QString& xmlContent)
 ________________________________________________________________
 */
 
+// Function to display XML with mistakes highlighted
 void MainWindow::displayXmlWithMistakes(const QString& xmlContent) {
     // Create a new QTextBrowser to display the XML content with mistakes highlighted
     QTextBrowser *xmlBrowser = new QTextBrowser(this);
@@ -108,6 +113,7 @@ void MainWindow::displayXmlWithMistakes(const QString& xmlContent) {
     
 }
 
+// Function to highlight mistakes in XML
 void MainWindow::highlightXmlMistakes(QTextBrowser* xmlBrowser, const QString& xmlContent) {
     QTextCursor cursor(xmlBrowser->document());
 
@@ -120,6 +126,7 @@ void MainWindow::highlightXmlMistakes(QTextBrowser* xmlBrowser, const QString& x
     }
 }
 
+// Function to highlight a tag error
 void MainWindow::highlightTagError(QTextCursor& cursor, const QString& xmlContent, int errorStart, int errorEnd) {
     if (xmlContent[errorStart + 1] != '/') {
         QString tagName = xmlContent.mid(errorStart + 1, errorEnd - errorStart - 1).trimmed();
@@ -140,6 +147,7 @@ void MainWindow::highlightTagError(QTextCursor& cursor, const QString& xmlConten
     }
 }
 
+// Function to move to the next error in XML
 void MainWindow::moveToNextError(const QString& xmlContent, int& errorEnd, int& errorStart) {
     // Move to the next potential error
     errorStart = xmlContent.indexOf('<', errorEnd);
@@ -150,22 +158,27 @@ void MainWindow::moveToNextError(const QString& xmlContent, int& errorEnd, int& 
 ________________________________________________________________
 */
 
+// This slot is triggered when a link is activated in the UI label.
 void MainWindow::on_label_linkActivated(const QString &link)
 {
      qDebug() << "Link Activated:" << link;
 }
 
 
-
+// Slot for handling the correction of XML errors.
 void MainWindow::on_correctErrorsButton_clicked()
 {
+    // Create an instance of CorrectErrors class.
     CorrectErrors correct_xml;
     QString xmlcontent = xmlParser.getxmlcontent();
     QString correctedXML=correct_xml.correct_errors(xmlcontent);
 
+    // Push the corrected XML content to the undo stack.
     undo.push(correctedXML);
+    // Update the XML content in the parser with the corrected version.
     xmlParser.setXMLContent(correctedXML);
 
+    // Display the corrected XML content in a QLabel within a scroll area.
     QLabel *correctErrors = new QLabel(this);
     correctErrors->setText(correctedXML);
     correctErrors->setWordWrap(true);
@@ -177,10 +190,17 @@ void MainWindow::on_correctErrorsButton_clicked()
 
 void MainWindow::on_PrettifyingButton_clicked()
 {
+    // Retrieve XML content from the parser.
     QString xmlcontent = xmlParser.getxmlcontent();
+    // Prettify the XML content using the Prettify class.
     QString prettifiedXml = prettify.prettifyXml(xmlcontent);
+
+    // Push the prettified XML content to the undo stack.
     undo.push(prettifiedXml);
+    // Update the XML content in the parser with the prettified version.
     xmlParser.setXMLContent(prettifiedXml);
+
+    // Display the prettified XML content in a QLabel within a scroll area.
     QLabel *PrettifyingLabel = new QLabel(this);
     PrettifyingLabel->setText(prettifiedXml);
     PrettifyingLabel->setWordWrap(true);
@@ -190,13 +210,19 @@ void MainWindow::on_PrettifyingButton_clicked()
 }
 
 
+// Slot for converting XML to JSON.
 void MainWindow::on_ConvertToJsonButton_clicked()
 {
+    // Retrieve XML content from the parser.
     QString xmlcontent = xmlParser.getxmlcontent();
-    //
+    // Create an instance of XMLToJson class.
     XMLToJson json(xmlcontent.toStdString());
-    string jsonText=json.getJSONText();
+    // Get the JSON representation of the XML.
+    string jsonText = json.getJSONText();
+
+    // Push the JSON content to the undo stack.
     undo.push(QString::fromStdString(jsonText));
+    // Display the JSON content in a QLabel within a scroll area.
     QLabel *ConvertToJsonLabel = new QLabel(this);
     ConvertToJsonLabel->setText(QString::fromStdString(jsonText));
     ConvertToJsonLabel->setWordWrap(true);
@@ -206,14 +232,20 @@ void MainWindow::on_ConvertToJsonButton_clicked()
 }
 
 
+
+// Slot for minifying XML content.
 void MainWindow::on_MinifyingButton_clicked()
 {
+    // Retrieve XML content from the parser.
     QString xmlcontent = xmlParser.getxmlcontent();
-    // 
+    // Create an instance of the Helpers class.
     Helpers helper;
+    // Minify the XML content.
     string minifiedString = helper.removeUnwantedSpaces(xmlcontent.toStdString());
-    // 
+
+    // Push the minified XML content to the undo stack.
     undo.push(QString::fromStdString(minifiedString));
+    // Display the minified XML content in a QLabel within a scroll area.
     QLabel *MinifyingLabel = new QLabel(this);
     MinifyingLabel->setText(QString::fromStdString(minifiedString));
     MinifyingLabel->setWordWrap(true);
@@ -222,16 +254,21 @@ void MainWindow::on_MinifyingButton_clicked()
     ui->scrollArea_2->setWidgetResizable(true);
 }
 
-
+// Slot for compressing XML content.
 void MainWindow::on_compressButton_clicked()
 {
+    // Retrieve XML content from the parser.
     QString xmlcontent = xmlParser.getxmlcontent();
+    // Create an instance of the Helpers class.
     Helpers o1;
+    // Remove unwanted spaces from XML content.
     string unSpaceXML = o1.removeUnwantedSpaces(xmlcontent.toStdString());
+    // Compress the XML content using Huffman coding.
+    string compress_data = root.compress(unSpaceXML);
 
-    string compress_data=root.compress(unSpaceXML);
-
+    // Push the compressed XML content to the undo stack.
     undo.push(QString::fromStdString(compress_data));
+    // Display the compressed XML content in a QLabel within a scroll area.
     QLabel *compressLabel = new QLabel(this);
     compressLabel->setText(QString::fromStdString(compress_data));
     compressLabel->setWordWrap(true);
@@ -257,14 +294,22 @@ void MainWindow::on_compressButton_clicked()
 }
 
 
+// Slot for decompressing XML content.
 void MainWindow::on_DecompressButton_clicked()
 {
-    string encodedData=root.getxmlcompressedfile();
-    string binarydata=root.charToBinaryString(encodedData);
-    HuffmanNode* TreeRoot =root.getTreeRoot();
-    string decodedData=root.decodeData(binarydata,TreeRoot);
+    // Retrieve compressed XML data from the Huffman tree.
+    string encodedData = root.getxmlcompressedfile();
+    // Convert compressed binary data to string.
+    string binarydata = root.charToBinaryString(encodedData);
+    // Get the root of the Huffman tree.
+    HuffmanNode* TreeRoot = root.getTreeRoot();
+    // Decompress the binary data using the Huffman tree.
+    string decodedData = root.decodeData(binarydata, TreeRoot);
+
+    // Push the decompressed XML content to the undo stack.
     undo.push(QString::fromStdString(decodedData));
-    QLabel *DecompressLabel  = new QLabel(this);
+    // Display the decompressed XML content in a QLabel within a scroll area.
+    QLabel *DecompressLabel = new QLabel(this);
     DecompressLabel->setText(QString::fromStdString(decodedData));
     DecompressLabel->setWordWrap(true);
 
