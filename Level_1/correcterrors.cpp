@@ -5,7 +5,9 @@ CorrectErrors::CorrectErrors() {}
 
 
 
-QString CorrectErrors::correct_errors(const QString& xmlcontent){
+QString CorrectErrors::correct_errors(QString& xmlcontent){
+    Helpers helper;
+    xmlcontent = QString::fromStdString(helper.removeUnwantedSpaces(xmlcontent.toStdString()));
     QStack<QString> tagStack;
     QStack<QString> unclosedtags;
     XMLParser xml_Parser;
@@ -35,6 +37,19 @@ QString CorrectErrors::correct_errors(const QString& xmlcontent){
                 }
 
                 QString tagName = xmlcontent.mid(startTagName, endTagName - startTagName).trimmed();
+
+                if(tagName[tagName.size()-1]=='/'){
+                    index = endTagName + 1;
+                    continue;
+                }
+                if (tagName.toStdString().find(" ") != -1) {
+                    tagName = QString::fromStdString(tagName.toStdString().substr(0, tagName.toStdString().find(" "))) ;
+                    if(tagName.toLower()=="?xml"){
+                        index = endTagName + 1;
+                        continue;
+                    }
+                }
+
 
                 if (isStartTag) {
                     tagStack.push(tagName);
