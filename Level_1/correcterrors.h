@@ -16,7 +16,7 @@ public:
     CorrectErrors();
     QString GetcorrectedXmlContent();
 
-    QString correct_errors(const QString& xmlContent);
+    QString correct_errors(QString& xmlContent);
 
 
 private:
