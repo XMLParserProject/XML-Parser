@@ -1,8 +1,8 @@
 #include "Helpers.h"
 
+
 // This method removes unwanted spaces and consolidates formatting in an XML string.
 // It ensures that spaces are appropriately placed around XML tags and characters.
-
 string Helpers::removeUnwantedSpaces(string XMLText) {
     // Initialize an empty string to store the modified XML text
     string output = "";
@@ -47,7 +47,6 @@ string Helpers::removeUnwantedSpaces(string XMLText) {
             previousCharacter = output[output.length() - 1];
         }
     }
-
     // Return the modified XML text
     return output;
 }
