@@ -6,11 +6,12 @@
 #include "globals.h"
 #include <QDebug>
 #include <QStack>
+#include "Helpers.h"
 
 class XMLParser {
 public:
     XMLParser();
-    void setXMLContent(QString& content);
+    void setXMLContent(const QString& content);
     bool checkConsistency();
     QString getxmlcontent();
 

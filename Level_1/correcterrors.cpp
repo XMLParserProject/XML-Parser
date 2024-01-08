@@ -5,7 +5,7 @@ CorrectErrors::CorrectErrors() {}
 
 
 
-QString CorrectErrors::correct_errors(QString& xmlcontent){
+QString CorrectErrors::correct_errors(const QString& xmlcontent){
     QStack<QString> tagStack;
     QStack<QString> unclosedtags;
     XMLParser xml_Parser;

@@ -5,9 +5,9 @@ XMLParser::XMLParser() {
     // Initialization if needed
 }
 
-void XMLParser::setXMLContent(QString& content) {
+void XMLParser::setXMLContent(const QString& content) {
     Helpers helper;
-    xmlContent = QString::fromStdString(helper.removeUnwantedSpaces(content.toStdString()));
+    xmlContent = content;
 }
 
 bool XMLParser::checkConsistency() {
