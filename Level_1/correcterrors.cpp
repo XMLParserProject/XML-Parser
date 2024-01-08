@@ -6,8 +6,6 @@ CorrectErrors::CorrectErrors() {}
 
 
 QString CorrectErrors::correct_errors(QString& xmlcontent){
-    Helpers helper;
-    xmlcontent = QString::fromStdString(helper.removeUnwantedSpaces(xmlcontent.toStdString()));
     QStack<QString> tagStack;
     QStack<QString> unclosedtags;
     XMLParser xml_Parser;
