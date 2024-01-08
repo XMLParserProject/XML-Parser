@@ -166,7 +166,9 @@ void MainWindow::on_correctErrorsButton_clicked()
     QString correctedXML=correct_xml.correct_errors(xmlcontent);
 
     undo.push(correctedXML);
-    xmlParser.setXMLContent(correctedXML);
+    if(!xmlParser.checkConsistency()){
+         xmlParser.setXMLContent(correctedXML);
+    }
 
     QLabel *correctErrors = new QLabel(this);
     correctErrors->setText(correctedXML);
